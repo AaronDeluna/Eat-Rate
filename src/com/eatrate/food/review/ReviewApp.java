@@ -1,7 +1,8 @@
 package com.eatrate.food.review;
 
+import com.eatrate.datamanager.ReviewDataManager;
 import com.eatrate.user.User;
-import com.eatrate.datamanager.RestaurantDataManager;
+import com.eatrate.datamanager.EstablishmentDataManager;
 import com.eatrate.datamanager.UserDataManager;
 import com.eatrate.enums.RestaurantType;
 import com.eatrate.food.establishment.Establishment;
@@ -19,7 +20,8 @@ import java.util.Scanner;
 
 public class ReviewApp {
     private UserDataManager userDataManager = new UserDataManager();
-    private RestaurantDataManager restaurantDataManager = new RestaurantDataManager();
+    private EstablishmentDataManager establishmentDataManager = new EstablishmentDataManager();
+    private ReviewDataManager reviewDataManager = new ReviewDataManager();
     public static int usersCount = 0;
     private User[] users;
     private Establishment[] establishments;
@@ -112,7 +114,7 @@ public class ReviewApp {
                 Establishment establishment = new Establishment(nameEstablishment.trim(), selectedType, location);
 
                 try {
-                    restaurantDataManager.createdNewRestaurant(establishment);
+                    establishmentDataManager.createdNewRestaurant(establishment);
                     break;
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
@@ -156,16 +158,17 @@ public class ReviewApp {
         return establishmentType;
     }
 
-
-
-    public void viewAllEstablishment() {
+    /**
+     * Находит все заведенья
+     */
+    public void findAllEstablishment() {
         try {
-            List<Establishment> establishmentList = restaurantDataManager.getAllEstablishment();
+            List<Establishment> establishmentList = establishmentDataManager.getAllEstablishment();
             for (Establishment establishment : establishmentList) {
                 System.out.printf("Название заведенья: %s" +
-                        ", Тип: %s" +
-                        ", %s" +
-                        ", Отзывов: %s шт.\n",
+                                ", Тип: %s" +
+                                ", %s" +
+                                ", Отзывов: %s шт.\n",
                         establishment.getName(),
                         establishment.getType().getName(),
                         establishment.getLocation(),
@@ -176,13 +179,54 @@ public class ReviewApp {
         }
     }
 
-
-    public void viewByNameEstablishment(String name) {
-
+    /**
+     * Находит заведенье по названию
+     */
+    public void findByNameEstablishment() {
+        System.out.println("Введите название заведенья: ");
+        String nameEstablishment = scanner.nextLine();
+        try {
+            if (!nameEstablishment.isEmpty()) {
+                Establishment establishment = establishmentDataManager.getByNameEstablishment(nameEstablishment.trim());
+                System.out.printf("Название заведенья: %s" +
+                                ", Тип: %s" +
+                                ", %s" +
+                                ", Отзывов: %s шт.\n",
+                        establishment.getName(),
+                        establishment.getType().getName(),
+                        establishment.getLocation(),
+                        establishment.getCountReview());
+            } else {
+                System.out.println(NOT_CORRECT_MESSAGE);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void addReview() {
+        System.out.println("Введите название заведенья, которому ходите оставить отзыв: ");
+        String nameEstablishment = scanner.nextLine();
+        System.out.println("Ваше имя: ");
+        String authorName = scanner.nextLine();
+        System.out.println("Ваш номер телефона: ");
+        String telephone = scanner.nextLine();
+        System.out.println("Укажите рейтинг от 1 до 5 ");
+        int rating = Integer.parseInt(scanner.nextLine());
+        System.out.println("Введите отзыв: ");
+        String comment = scanner.nextLine();
 
+        Review review = new Review(authorName, telephone, rating, comment);
+
+        try {
+            if (!nameEstablishment.isEmpty() && reviewDataManager.createNewReview(nameEstablishment, review)) {
+                System.out.println("Успешно приняли ваш отзыв!");
+            } else {
+                System.out.println(NOT_CORRECT_MESSAGE);
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void searchEstablishment() {

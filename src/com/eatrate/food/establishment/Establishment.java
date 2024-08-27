@@ -3,6 +3,9 @@ package com.eatrate.food.establishment;
 import com.eatrate.food.review.Review;
 import com.eatrate.enums.RestaurantType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Establishment: Представляет ресторан или кафе
  */
@@ -11,7 +14,8 @@ public class Establishment {
     protected String name;
     protected RestaurantType type;
     protected Location location;
-    protected Review[] review;
+    protected List<Review> reviews = new ArrayList<>();
+    public static int establishmentCount = 0;
 
     public Establishment(String name, RestaurantType type, Location location) {
         this.name = name;
@@ -71,19 +75,19 @@ public class Establishment {
         this.location = location;
     }
 
-    public Review[] getReview() {
-        return review;
+    public List<Review> getReviews() {
+        return reviews;
     }
 
-    public void setReview(Review[] review) {
-        this.review = review;
+    public void setReview(Review review) {
+        this.reviews.add(review);
     }
 
     public int getCountReview() {
-        if (review == null) {
+        if (reviews == null) {
             return 0;
         } else {
-            return this.review.length;
+            return this.reviews.size();
         }
     }
 }

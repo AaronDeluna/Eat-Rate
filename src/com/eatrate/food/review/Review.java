@@ -6,11 +6,13 @@ package com.eatrate.food.review;
 
 public class Review {
     private String author;
-    private double rating;
+    private String telephoneNumber;
+    private int rating;
     private String comment;
 
-    public Review(String author, double rating, String comment) {
+    public Review(String author, String telephoneNumber, int rating, String comment) {
         this.author = author;
+        this.telephoneNumber = telephoneNumber;
         this.rating = rating;
         this.comment = comment;
     }
@@ -23,11 +25,19 @@ public class Review {
         this.author = author;
     }
 
-    public double getRating() {
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
+
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 
@@ -43,6 +53,7 @@ public class Review {
     public String toString() {
         return "Review{" +
                 "author='" + author + '\'' +
+                ", telephoneNumber='" + telephoneNumber + '\'' +
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +
                 '}';
